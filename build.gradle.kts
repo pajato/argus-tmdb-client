@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform") version "1.3.31"
     `maven-publish`
+    jacoco
 }
 
 group = "com.pajato"
@@ -18,7 +19,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("com.pajato:argus-tmdb-core:0.0.7")
+                implementation("com.pajato:argus-tmdb-core:0.0.8")
             }
         }
         commonTest {
@@ -47,7 +48,7 @@ kotlin {
     }
 }
 
-// for future functionality.
+// for future functionality related to using the available TmdbData ids.
 task("generateSecureProperties") {
     doLast {
         File("$projectDir/src/commonMain/resources", "secureProps.txt").apply {
@@ -63,3 +64,27 @@ tasks.register<Copy>("copyTestResources") {
 }
 
 tasks.get(name = "jvmTest").dependsOn += tasks.get(name = "copyTestResources")
+
+jacoco {
+    toolVersion = "0.8.3"
+}
+
+tasks {
+    val coverage = register<JacocoReport>("jacocoJVMTestReport") {
+        group = "Reporting"
+        description = "Generate Jacoco coverage report."
+        classDirectories.setFrom(fileTree("$buildDir/classes/kotlin/jvm/main"))
+        val coverageSourceDirs = listOf("src/commonMain/kotlin", "src/jvmMain/kotlin")
+        additionalSourceDirs.setFrom(files(coverageSourceDirs))
+        sourceDirectories.setFrom(files(coverageSourceDirs))
+        executionData.setFrom(files("$buildDir/jacoco/jvmTest.exec"))
+        reports {
+            html.isEnabled = true
+            xml.isEnabled = true
+            csv.isEnabled = false
+        }
+    }
+    named("jvmTest") {
+        finalizedBy(coverage)
+    }
+}
