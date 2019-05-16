@@ -19,3 +19,4 @@ fun <T1: TmdbData, T2: TmdbData> getNextPage(type: KClass<T1>, pageSize: Int, Pa
 fun <T1: TmdbData, T2: TmdbData> getPrevPage(type: KClass<T1>, pageSize: Int, Page<T1>): Page<T2>
 
 ```
+Version 0.0.2 is available via jcenter or Maven Central.

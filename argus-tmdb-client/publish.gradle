@@ -1,0 +1,100 @@
+// This code is from Kevin Galligan's Stately project via Jake
+// Wharton's (and friend) SQLDelight project.
+
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+group = Publish.GROUP
+version = Versions.ARGUS_CLIENT
+
+def isReleaseBuild() {
+  return !version.contains("SNAPSHOT")
+}
+
+def getReleaseRepositoryUrl() {
+  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL :
+          "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL :
+          "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+  return hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+  return hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+}
+
+task emptySourcesJar(type: Jar) {
+  archiveClassifier.set("sources")
+}
+task emptyJavadocJar(type: Jar) {
+  archiveClassifier.set("javadoc")
+}
+
+publishing {
+  publications.all {
+    artifact emptyJavadocJar
+
+    pom.withXml {
+      def root = asNode()
+
+      root.children().last() + {
+        resolveStrategy = DELEGATE_FIRST
+
+        //artifactId Publish.POM_ARTIFACT_ID
+        description Publish.POM_DESCRIPTION
+        name Publish.POM_NAME
+        url Publish.POM_URL
+        licenses {
+          license {
+            name Publish.POM_LICENSE_NAME
+            url Publish.POM_LICENSE_URL
+            distribution Publish.POM_LICENSE_DIST
+          }
+        }
+        scm {
+          url Publish.POM_SCM_URL
+          connection Publish.POM_SCM_CONNECTION
+          developerConnection Publish.POM_SCM_DEV_CONNECTION
+        }
+        developers {
+          developer {
+            id Publish.POM_DEVELOPER_ID
+            name Publish.POM_DEVELOPER_NAME
+          }
+        }
+      }
+    }
+  }
+
+  afterEvaluate {
+    publications.getByName('kotlinMultiplatform') {
+      // Source jars are only created for platforms, not the common artifact.
+      artifact emptySourcesJar
+    }
+  }
+
+  repositories {
+    maven {
+      url isReleaseBuild() ? getReleaseRepositoryUrl() : getSnapshotRepositoryUrl()
+      credentials {
+        username getRepositoryUsername()
+        password getRepositoryPassword()
+      }
+    }
+    maven {
+      name = 'test'
+      url "file://${rootProject.project(Publish.POM_ARTIFACT_ID).buildDir}/arguslocalMaven"
+    }
+  }
+}
+
+signing {
+  required { isReleaseBuild() }
+  sign publishing.publications
+}
