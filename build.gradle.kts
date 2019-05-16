@@ -1,3 +1,8 @@
+
+val kotlinVersion: String by extra("1.3.31")
+val argusCoreVersion: String by extra("0.0.10")
+val javalinVersion: String by extra("2.8.0")
+
 plugins {
     kotlin("multiplatform") version "1.3.31"
     `maven-publish`
@@ -10,7 +15,6 @@ version = "0.0.1"
 repositories {
     jcenter()
     mavenCentral()
-    mavenLocal()
 }
 
 kotlin {
@@ -19,7 +23,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("com.pajato:argus-tmdb-core:0.0.8")
+                implementation("com.pajato.argus:argus-tmdb-core:$argusCoreVersion")
             }
         }
         commonTest {
@@ -32,8 +36,8 @@ kotlin {
         jvm("jvm").compilations["main"].defaultSourceSet {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-                implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.31")
-                implementation("com.pajato:argus-tmdb-core-jvm:0.0.7")
+                implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+                implementation("com.pajato.argus:argus-tmdb-core-jvm:$argusCoreVersion")
             }
         }
 
@@ -41,7 +45,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test")
                 implementation("org.jetbrains.kotlin:kotlin-test-junit")
-                implementation("io.javalin:javalin:2.8.0")
+                implementation("io.javalin:javalin:$javalinVersion")
                 implementation("org.slf4j:slf4j-simple:1.7.26")
             }
         }
