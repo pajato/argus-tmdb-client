@@ -21,4 +21,6 @@ pluginManagement {
 
 rootProject.name = "argus-tmdb-client"
 
+include("library")
+
 enableFeaturePreview("GRADLE_METADATA")
