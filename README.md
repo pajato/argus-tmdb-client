@@ -1,10 +1,10 @@
 # argus-tmdb-client
 
-![TMDB PoweredBy Logo](images/powered-by-tmdb.png)
+![TMDB PoweredBy Logo](https://www.themoviedb.org/assets/2/v4/logos/408x161-powered-by-rectangle-green-bb4301c10ddc749b4e79463811a68afebeae66ef43d17bcfd8ff0e60ded7ce99.png)
 
-[![license: LGPL v3](https://img.shields.io/badge/license-LGPL%20v3-blue.svg)]
-[![build: passing](https://img.shields.io/badge/build-passing-brightgreen.svg)]
-[![codecov: 100](https://img.shields.io/badge/codecov-100%25-brightgreen.svg)]
+![license: LGPL v3](https://img.shields.io/badge/license-LGPL%20v3-blue.svg)
+![build: passing](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![codecov: 100](https://img.shields.io/badge/codecov-100%25-brightgreen.svg)
 
 ## Overview
 
